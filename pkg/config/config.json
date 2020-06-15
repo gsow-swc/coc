@@ -1,0 +1,10 @@
+{
+    "base_url": "https://api.clashofclans.com/v1",
+    "log": {
+        "dir": "log_directory",
+        "trial": {
+            "file": "trial.log",
+            "level": "Info"
+        }
+    }
+}

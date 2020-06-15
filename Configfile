@@ -1,0 +1,6 @@
+# Change this and commit to create new release
+VERSION=0.1.0
+REVISION=v1beta1
+BUILD_DATE:=`date -u +.%Y-%m-%dT%H:%M:%S`
+
+GO ?= go
