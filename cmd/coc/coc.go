@@ -144,10 +144,10 @@ var (
 					},
 				},
 				{
-					Name:        "get",
+					Name:        "current",
 					Usage:       "Retrieves information about the current war for a clan",
 					Description: "Retrieves information about the current war for a clan",
-					Action:      cmd.WarGet,
+					Action:      cmd.WarCurrent,
 					Flags: []cli.Flag{
 						&cli.StringFlag{
 							Name:    "clan",
@@ -158,6 +158,67 @@ var (
 							Name:    "name",
 							Aliases: []string{"n"},
 							Usage:   "The name of the clan",
+						},
+					},
+				},
+				{
+					Name:        "attack",
+					Usage:       "Retrieves details about the current war for a clan",
+					Description: "Retrieves details about the current war for a clan",
+					Action:      cmd.WarAttack,
+					Flags: []cli.Flag{
+						&cli.StringFlag{
+							Name:    "clan",
+							Aliases: []string{"c"},
+							Usage:   "The ID of the clan",
+						},
+						&cli.StringFlag{
+							Name:    "name",
+							Aliases: []string{"n"},
+							Usage:   "The name of the clan",
+						},
+					},
+				},
+				{
+					Name:        "defend",
+					Usage:       "Retrieves details about the current war for a clan",
+					Description: "Retrieves details about the current war for a clan",
+					Action:      cmd.WarDefend,
+					Flags: []cli.Flag{
+						&cli.StringFlag{
+							Name:    "clan",
+							Aliases: []string{"c"},
+							Usage:   "The ID of the clan",
+						},
+						&cli.StringFlag{
+							Name:    "name",
+							Aliases: []string{"n"},
+							Usage:   "The name of the clan",
+						},
+					},
+				},
+				{
+					Name:        "roster",
+					Usage:       "Retrieves the roster in the current war",
+					Description: "Retrieves the roster in the current war",
+					Action:      cmd.WarRoster,
+					Flags: []cli.Flag{
+						&cli.StringFlag{
+							Name:    "clan",
+							Aliases: []string{"c"},
+							Usage:   "The ID of the clan",
+						},
+						&cli.StringFlag{
+							Name:    "name",
+							Aliases: []string{"n"},
+							Usage:   "The name of the clan",
+						},
+						&cli.IntFlag{
+							Name:        "round",
+							Aliases:     []string{"r"},
+							Usage:       "The CWL round",
+							Value:       0,
+							DefaultText: "the current war",
 						},
 					},
 				},
