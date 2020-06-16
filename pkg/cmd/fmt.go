@@ -291,12 +291,40 @@ func (w war2) String() string {
 			t.AppendRow(table.Row{m.MapPosition, m.Name, m.TownHall, getStars(a.Stars), strconv.Itoa(a.DestructionPercentage) + "%", a.TargetTownhall, a.TargetMapPosition, a.TargetName})
 		} else {
 			a1 := m.Attacks[0]
-			a2 := m.Attacks[0]
-			t.AppendRow(table.Row{m.MapPosition, m.Name, m.TownHall, a1.TargetName, a1.TargetMapPosition, a1.TargetTownhall, getStars(a1.Stars), strconv.Itoa(a1.DestructionPercentage) + "%", "   ", a2.TargetName, a2.TargetMapPosition, a2.TargetTownhall, getStars(a2.Stars), strconv.Itoa(a2.DestructionPercentage) + "%"})
+			a2 := m.Attacks[1]
+			t.AppendRow(table.Row{m.MapPosition, m.Name, m.TownHall, getStars(a1.Stars), strconv.Itoa(a1.DestructionPercentage) + "%", a1.TargetTownhall, a1.TargetMapPosition, a1.TargetName, "   ", getStars(a2.Stars), strconv.Itoa(a2.DestructionPercentage) + "%", a2.TargetTownhall, a2.TargetMapPosition, a2.TargetName})
 		}
 	}
 
 	t.SetCaption(getTimeLeft(w.EndTime))
+
+	return t.Render()
+}
+
+// WarStatus stores information about an ongoing war
+type warTargets struct {
+	ClanName     string
+	OpponentName string
+	Targets      []warStatusTarget
+}
+
+// String returns a string represntation of the non-cleared targets in a war
+func (ws warTargets) String() string {
+	t := table.NewWriter()
+	t.SetStyle(table.StyleColoredBright)
+	t.SetColumnConfigs([]table.ColumnConfig{
+		{Number: 5, Align: text.AlignRight, AlignHeader: text.AlignCenter},
+	})
+
+	t.SetTitle(ws.ClanName + " vs " + ws.OpponentName)
+	t.AppendHeader(table.Row{"#", "Name", "TH", threestar, "%"})
+	for _, target := range ws.Targets {
+		if target.DestructionPercentage == 0 {
+			t.AppendRow(table.Row{target.MapPosition, target.Name, target.TownHall})
+		} else {
+			t.AppendRow(table.Row{target.MapPosition, target.Name, target.TownHall, getStars(target.Stars), strconv.Itoa(target.DestructionPercentage) + "%"})
+		}
+	}
 
 	return t.Render()
 }

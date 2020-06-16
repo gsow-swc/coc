@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gsow-swc/coc/pkg/cmd"
+	"github.com/gsow-swc/coc/pkg/cmd2"
 	"github.com/gsow-swc/coc/pkg/log"
 	"github.com/gsow-swc/coc/pkg/query/request"
 	"github.com/urfave/cli/v2"
@@ -38,7 +39,7 @@ var (
 					Name:        "ls",
 					Usage:       "Retrieves a list of clans",
 					Description: "Retrieves a list of clans",
-					Action:      cmd.ClanList,
+					Action:      cmd2.ClanList,
 					Flags: []cli.Flag{
 						&cli.StringFlag{
 							Name:    "name",
@@ -86,7 +87,7 @@ var (
 					Name:        "get",
 					Usage:       "Gets details about a clan",
 					Description: "Gets details about a clan",
-					Action:      cmd.ClanGet,
+					Action:      cmd2.ClanGet,
 					Flags: []cli.Flag{
 						&cli.StringFlag{
 							Name:    "clan",
@@ -104,7 +105,7 @@ var (
 					Name:        "members",
 					Usage:       "Retrieves a list of members of a clan",
 					Description: "Retrieves a list of members of a clan",
-					Action:      cmd.ClanMembers,
+					Action:      cmd2.ClanMembersGet,
 					Flags: []cli.Flag{
 						&cli.StringFlag{
 							Name:    "clan",
@@ -129,7 +130,7 @@ var (
 					Name:        "ls",
 					Usage:       "Retrieves the list of wars a clan has paricipated in",
 					Description: "Retrieves the list of wars a clan has paricipated in",
-					Action:      cmd.WarList,
+					Action:      cmd2.WarList,
 					Flags: []cli.Flag{
 						&cli.StringFlag{
 							Name:    "clan",
@@ -147,7 +148,7 @@ var (
 					Name:        "current",
 					Usage:       "Retrieves information about the current war for a clan",
 					Description: "Retrieves information about the current war for a clan",
-					Action:      cmd.WarCurrent,
+					Action:      cmd2.WarCurrent,
 					Flags: []cli.Flag{
 						&cli.StringFlag{
 							Name:    "clan",
@@ -201,7 +202,7 @@ var (
 					Name:        "roster",
 					Usage:       "Retrieves the roster in the current war",
 					Description: "Retrieves the roster in the current war",
-					Action:      cmd.WarRoster,
+					Action:      cmd2.WarRoster,
 					Flags: []cli.Flag{
 						&cli.StringFlag{
 							Name:    "clan",
@@ -213,12 +214,23 @@ var (
 							Aliases: []string{"n"},
 							Usage:   "The name of the clan",
 						},
-						&cli.IntFlag{
-							Name:        "round",
-							Aliases:     []string{"r"},
-							Usage:       "The CWL round",
-							Value:       0,
-							DefaultText: "the current war",
+					},
+				},
+				{
+					Name:        "targets",
+					Usage:       "Retrieves the non-cleared targets in the current war",
+					Description: "Retrieves the non-cleared targets in the current war",
+					Action:      cmd.WarTargets,
+					Flags: []cli.Flag{
+						&cli.StringFlag{
+							Name:    "clan",
+							Aliases: []string{"c"},
+							Usage:   "The ID of the clan",
+						},
+						&cli.StringFlag{
+							Name:    "name",
+							Aliases: []string{"n"},
+							Usage:   "The name of the clan",
 						},
 					},
 				},

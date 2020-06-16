@@ -139,7 +139,7 @@ func WarAttack(c *cli.Context) error {
 			Name: opponent.Name,
 			Tag:  opponent.Tag,
 		},
-		CwlWar:  true,
+		CwlWar:  false,
 		EndTime: warEndTime,
 	}
 	for i, member := range clan.Members {
@@ -235,7 +235,7 @@ func WarDefend(c *cli.Context) error {
 	return nil
 }
 
-// WarDefend gets details about the current war for a clan
+// WarRoster gets details about the current war for a clan
 func WarRoster(c *cli.Context) error {
 	// Get the tag of the clan
 	tag, err := getTag(c)
@@ -319,5 +319,70 @@ func WarRoster(c *cli.Context) error {
 
 	fmt.Println(wm)
 
+	return nil
+}
+
+// WarTargets gets the set of non-cleared targets for the current war
+func WarTargets(c *cli.Context) error {
+	// Get the tag of the clan
+	tag, err := getTag(c)
+	if err != nil {
+		return err
+	}
+
+	req := request.ClanCurrentWar{Tag: tag}
+	war, err := req.Get()
+	if err != nil {
+		log.Error("failed to get the response")
+		fmt.Println(err)
+		return err
+	}
+
+	// Sort the members based on their map position
+	sort.Slice(war.Clan.Members, func(i, j int) bool { return war.Clan.Members[i].MapPosition < war.Clan.Members[j].MapPosition })
+	sort.Slice(war.Opponent.Members, func(i, j int) bool { return war.Opponent.Members[i].MapPosition < war.Opponent.Members[j].MapPosition })
+
+	// Get the two clans
+	var clan response.ClanWarTeam
+	var opponent response.ClanWarTeam
+	if war.Clan.Tag == tag {
+		clan = war.Clan
+		opponent = war.Opponent
+	} else {
+		clan = war.Opponent
+		opponent = war.Clan
+	}
+
+	// Build a map of the player tag to the player name
+	type player struct {
+		name string
+		th   int
+	}
+	playerMap := make(map[string]player)
+	for _, m := range clan.Members {
+		playerMap[m.Tag] = player{name: m.Name, th: m.TownhallLevel}
+	}
+	for _, m := range opponent.Members {
+		playerMap[m.Tag] = player{name: m.Name, th: m.TownhallLevel}
+	}
+
+	var wt warTargets
+	wt = warTargets{ClanName: clan.Name, OpponentName: opponent.Name}
+	for i, m := range opponent.Members {
+		if m.BestOpponentAttack.Stars < 3 {
+			target := warStatusTarget{
+				Name:        m.Name,
+				MapPosition: i + 1,
+				TownHall:    m.TownhallLevel,
+			}
+			if m.BestOpponentAttack.AttackerTag != "" {
+				target.Stars = m.BestOpponentAttack.Stars
+				target.DestructionPercentage = m.BestOpponentAttack.DestructionPercentage
+			}
+			wt.Targets = append(wt.Targets, target)
+		}
+	}
+
+	fmt.Println(wt)
 	return nil
 }
